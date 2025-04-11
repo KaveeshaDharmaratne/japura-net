@@ -120,7 +120,7 @@
         }
         
         // Check if email has a valid university domain (example validation)
-        if (!this.email.includes('.edu') && !this.email.includes('ac.')) {
+        if (!this.email.includes('.sjp') && !this.email.includes('.ac')) {
           this.passwordError = 'Please use a valid university email address';
           return;
         }
