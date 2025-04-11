@@ -5,14 +5,10 @@ import AuthView from '../views/AuthView.vue'
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/auth',
     name: 'AuthView',
     component: AuthView
-  }
+  },
+ 
 ]
 
 const router = createRouter({
