@@ -104,7 +104,7 @@
           'Architecture & Design'
         ],
         getImageUrl(imageName) {
-            return require('../assets/sjp-logo.jpg')
+          return require(`@/assets/${imageName}`);
         },
       }
     },

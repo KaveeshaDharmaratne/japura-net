@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import DoValidations from '../services/DoValidations';
+import DoValidations from '../../services/DoValidations';
 
 export default {
     data() {
@@ -51,7 +51,7 @@ export default {
             email: '',
             password: '',
             getImageUrl(imageName) {
-                return require('../assets/sjp-logo.jpg')
+                return require(`@/assets/${imageName}`);
             },
             errors: '',
             
