@@ -1,13 +1,13 @@
-package com.japura.japuranet;
+package com.japura.forum.forum_api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class JapuranetApplication {
+public class ForumApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(JapuranetApplication.class, args);
+		SpringApplication.run(ForumApiApplication.class, args);
 	}
 
 }

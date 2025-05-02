@@ -1,10 +1,10 @@
-package com.japura.japuranet;
+package com.japura.forum.forum_api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class JapuranetApplicationTests {
+class ForumApiApplicationTests {
 
 	@Test
 	void contextLoads() {
