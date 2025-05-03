@@ -38,6 +38,12 @@
                     <button @click="currentFilter = 'discussions'" :class="{ active: currentFilter === 'discussions' }">
                         Discussions
                     </button>
+                    <button @click="currentFilter = 'events'" :class="{ active: currentFilter === 'events' }">
+                        Events
+                    </button>
+                    <button @click="currentFilter = 'announcements'" :class="{ active: currentFilter === 'announcements' }">
+                        Announcements
+                    </button>
                 </div>
                 <div class="sort-options">
                     <select v-model="sortBy">
@@ -137,7 +143,6 @@ export default {
                 "Question",
                 "Discussion",
                 "Event",
-                "Resource",
                 "Announcement",
             ],
             newComments: {},
@@ -161,6 +166,10 @@ export default {
                 result = result.filter((post) => post.category === "Question");
             } else if (this.currentFilter === "discussions") {
                 result = result.filter((post) => post.category === "Discussion");
+            } else if (this.currentFilter === "events") {
+                result = result.filter((post) => post.category === "Event");
+            } else if (this.currentFilter === "announcements") {
+                result = result.filter((post) => post.category === "Announcement");
             }
 
             // Apply sorting
