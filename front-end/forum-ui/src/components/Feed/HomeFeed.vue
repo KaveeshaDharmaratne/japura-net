@@ -433,7 +433,7 @@ export default {
 
 .create-post textarea {
     width: 100%;
-    padding: 15px;
+    padding: 15px 0 15px 3px;
     border: 1px solid #ddd;
     border-radius: 8px;
     resize: none;
