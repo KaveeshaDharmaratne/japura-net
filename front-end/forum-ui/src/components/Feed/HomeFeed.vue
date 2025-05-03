@@ -161,24 +161,29 @@ export default {
         filteredPosts() {
             let result = [...this.posts];
 
-            // Apply filter
-            if (this.currentFilter === "questions") {
-                result = result.filter((post) => post.category === "Question");
-            } else if (this.currentFilter === "discussions") {
-                result = result.filter((post) => post.category === "Discussion");
-            } else if (this.currentFilter === "events") {
-                result = result.filter((post) => post.category === "Event");
-            } else if (this.currentFilter === "announcements") {
-                result = result.filter((post) => post.category === "Announcement");
+            //Define filterMap to map categories
+            const filterMap = {
+                questions: "Question",
+                discussions: "Discussion",
+                events: "Event",
+                announcements: "Announcement",
             }
 
-            // Apply sorting
-            if (this.sortBy === "recent") {
-                result.sort((a, b) => b.timestamp - a.timestamp);
-            } else if (this.sortBy === "popular") {
-                result.sort((a, b) => b.likes - a.likes);
-            } else if (this.sortBy === "comments") {
-                result.sort((a, b) => b.comments.length - a.comments.length);
+            // Apply filterMap
+            if (this.currentFilter !== "all" && filterMap[this.currentFilter]) {
+                result = result.filter(post => post.category === filterMap[this.currentFilter]);
+            }
+
+            //Define sortingMap to map sorting options
+            const sortingMap = {
+                recent: (a, b) => b.timestamp - a.timestamp,
+                popular: (a, b) => b.likes - a.likes,
+                comments: (a, b) => b.comments.length - a.comments.length,
+            }
+
+            // Apply sortingMap
+            if (this.sortBy in sortingMap) {
+                result.sort(sortingMap[this.sortBy]);
             }
 
             return result;
