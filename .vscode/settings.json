@@ -1,0 +1,5 @@
+{
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "jdk.runConfig.env": "GOOGLE_APPLICATION_CREDENTIALS=/home/lahirucw/Wife/firebase-service-account-credentials.json"
+}

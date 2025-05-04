@@ -1,0 +1,44 @@
+package com.japura.forum.forum_api.config;
+
+import java.io.IOException;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuth;
+
+@Configuration
+public class FirebaseConfig {
+
+    @Bean
+    public FirebaseApp firebaseApp() throws IOException {
+
+        //InputStream serviceAccount = null;
+        GoogleCredentials googleCredentials = GoogleCredentials.getApplicationDefault();
+        FirebaseOptions options = FirebaseOptions.builder()
+                .setCredentials(googleCredentials)
+                //.setDatabaseUrl("https://japura-net-default-rtdb.firebaseio.com/")
+                //.setStorageBucket("japura-net.firebasestorage.app")
+                .build();
+
+        // Check if the firebase app is already initialized
+        if(FirebaseApp.getApps().isEmpty()) {
+
+            return FirebaseApp.initializeApp(options);
+
+        } else {
+            
+            return FirebaseApp.getInstance();
+        }
+
+    }
+
+    @Bean
+    public FirebaseAuth firebaseAuth(FirebaseApp firebaseApp) {
+        return FirebaseAuth.getInstance(firebaseApp);
+    }
+
+}
