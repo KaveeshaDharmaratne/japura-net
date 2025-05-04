@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
-
-    private String id;
+public class SignupInput {
+    
     private String firstName;
     private String lastName;
-    private String email;
     private String faculty;
-    
+    private String email;
+    private String password;
+    private String confirmPassword;
 }
