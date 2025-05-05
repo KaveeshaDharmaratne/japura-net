@@ -1,17 +1,15 @@
 <template>
-  <div class="home">
-    <h1>
-      This is home
-    </h1>
-  </div>
+  <HomeFeed />
 </template>
 
 <script>
 
+import HomeFeed from '@/components/Feed/HomeFeed.vue';
+
 export default {
   name: 'HomeView',
   components: {
-    
+    HomeFeed
   }
 }
 </script>

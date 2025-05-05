@@ -13,6 +13,8 @@
         <div class="feed-container">
             <!-- Create post section -->
             <div class="create-post">
+                <textarea v-model="newPostTitle" placeholder="Title (optional)"
+                    rows="1"></textarea>
                 <textarea v-model="newPostContent" placeholder="Ask a question or share something with the community..."
                     rows="3"></textarea>
                 <div class="post-actions">
@@ -135,6 +137,7 @@ export default {
         return {
             loading: true,
             posts: [],
+            newPostTitle: "",
             newPostContent: "",
             newPostCategory: "",
             currentFilter: "all",
@@ -307,13 +310,17 @@ export default {
                 return;
             }
 
+            if(!this.newPostTitle.trim()) {
+                this.newPostTitle = null; // Set title to null if not provided
+            }
+
             const newPost = {
                 id: this.posts.length + 1,
                 username: this.currentUser.username,
                 userAvatar: this.currentUser.avatar,
                 faculty: this.currentUser.faculty,
                 timestamp: Date.now(),
-                title: null, // Simple posts might not have titles
+                title: this.newPostTitle, // Simple posts might not have titles
                 content: this.newPostContent,
                 category: this.newPostCategory,
                 likes: 0,
@@ -325,6 +332,7 @@ export default {
             this.posts.unshift(newPost);
 
             // Reset form
+            this.newPostTitle = "";
             this.newPostContent = "";
             this.newPostCategory = "";
         },
