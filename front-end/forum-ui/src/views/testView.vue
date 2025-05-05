@@ -71,6 +71,7 @@
                 <div v-for="post in filteredPosts" :key="post.id" class="post-card">
                     <div class="post-header">
                         <div class="user-info">
+                            <img :src="post.userAvatar || '/api/placeholder/40/40'" alt="User Avatar" class="avatar" />
                             <div>
                                 <div class="username">{{ post.username }}</div>
                                 <div class="post-meta">
@@ -110,6 +111,8 @@
                     <div v-if="post.showComments" class="comments-section">
                         <div v-for="comment in post.comments" :key="comment.id" class="comment">
                             <div class="comment-header">
+                                <img :src="comment.userAvatar || '/api/placeholder/30/30'" alt="User Avatar"
+                                    class="comment-avatar" />
                                 <div>
                                     <div class="comment-username">{{ comment.username }}</div>
                                     <div class="comment-timestamp">
@@ -215,6 +218,7 @@ export default {
                     id: 1,
                     username: "DefaultUser",
                     faculty: "Unknown",
+                    avatar: "/api/placeholder/40/40",
                 };
             }
         },
@@ -249,6 +253,7 @@ export default {
 
             const postData = {
                 username: this.currentUser.username,
+                userAvatar: this.currentUser.avatar,
                 faculty: this.currentUser.faculty,
                 title: this.postTitle.trim() || null, // Use null if empty
                 content: this.newPostContent,
@@ -306,6 +311,7 @@ export default {
 
             const commentData = {
                 username: this.currentUser.username,
+                userAvatar: this.currentUser.avatar,
                 content: commentContent,
             };
 
@@ -490,15 +496,20 @@ button {
 .post-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     margin-bottom: 15px;
 }
 
 .user-info {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
+    align-items: center;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 
 .username {
@@ -580,9 +591,15 @@ button {
 
 .comment-header {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     margin-bottom: 5px;
+}
+
+.comment-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 
 .comment-username {
@@ -597,7 +614,7 @@ button {
 }
 
 .comment-content {
-    margin-top: 5px;
+    margin-left: 40px;
     color: #333;
 }
 

@@ -1,0 +1,138 @@
+{
+    "currentUser": {
+      "id": 1,
+      "username": "currentUser",
+      "faculty": "Computer Science",
+      "avatar": "/api/placeholder/40/40"
+    },
+    "posts": [
+      {
+        "id": 1,
+        "username": "JaneSmith",
+        "userAvatar": "/api/placeholder/40/40",
+        "faculty": "Engineering",
+        "timestamp": 1714734800000,
+        "title": "Question about final project submission",
+        "content": "Does anyone know the deadline for the final project in Advanced Algorithms? The syllabus says next Friday but the professor mentioned something different in class.",
+        "category": "Question",
+        "likes": 12,
+        "showComments": false,
+        "comments": [
+          {
+            "id": 1,
+            "username": "JohnDoe",
+            "userAvatar": "/api/placeholder/30/30",
+            "timestamp": 1714735000000,
+            "content": "I asked the professor yesterday, it's definitely next Friday at 11:59 PM."
+          },
+          {
+            "id": 2,
+            "username": "AliceWilliams",
+            "userAvatar": "/api/placeholder/30/30",
+            "timestamp": 1714736000000,
+            "content": "There's also an announcement about it on the course page."
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "username": "MichaelBrown",
+        "userAvatar": "/api/placeholder/40/40",
+        "faculty": "Business",
+        "timestamp": 1714731200000,
+        "title": null,
+        "content": "Looking for study group partners for the Economics midterm next week. Anyone interested?",
+        "category": "Discussion",
+        "likes": 5,
+        "showComments": false,
+        "comments": [
+          {
+            "id": 3,
+            "username": "SarahJohnson",
+            "userAvatar": "/api/placeholder/30/30",
+            "timestamp": 1714731300000,
+            "content": "I'm interested! Let's create a group chat."
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "username": "UniversityAdmin",
+        "userAvatar": "/api/placeholder/40/40",
+        "faculty": "Administration",
+        "timestamp": 1714648800000,
+        "title": "Campus Library Extended Hours",
+        "content": "The main library will have extended hours (until 2 AM) during the final exam period starting next week.",
+        "image": "/api/placeholder/600/300",
+        "category": "Announcement",
+        "likes": 45,
+        "showComments": false,
+        "comments": [
+          {
+            "id": 4,
+            "username": "RobertGarcia",
+            "userAvatar": "/api/placeholder/30/30",
+            "timestamp": 1714650000000,
+            "content": "This is great news! Will the quiet study rooms also be available during these extended hours?"
+          },
+          {
+            "id": 5,
+            "username": "UniversityAdmin",
+            "userAvatar": "/api/placeholder/30/30",
+            "timestamp": 1714651000000,
+            "content": "Yes, all facilities including study rooms will be available during extended hours."
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "username": "EmilyWong",
+        "userAvatar": "/api/placeholder/40/40",
+        "faculty": "Arts",
+        "timestamp": 1714684800000,
+        "title": "Campus Art Exhibition",
+        "content": "Don't miss the annual student art exhibition this weekend at the University Gallery. Featuring works from all departments!",
+        "image": "/api/placeholder/600/300",
+        "category": "Event",
+        "likes": 28,
+        "showComments": false,
+        "comments": [
+          {
+            "id": 6,
+            "username": "DavidLee",
+            "userAvatar": "/api/placeholder/30/30",
+            "timestamp": 1714685800000,
+            "content": "Looking forward to it! What are the opening hours?"
+          },
+          {
+            "id": 7,
+            "username": "EmilyWong",
+            "userAvatar": "/api/placeholder/30/30",
+            "timestamp": 1714686000000,
+            "content": "10 AM to 8 PM on Saturday and Sunday. Hope to see you there!"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "username": "ProfJones",
+        "userAvatar": "/api/placeholder/40/40",
+        "faculty": "Mathematics",
+        "timestamp": 1714717200000,
+        "title": "Math Help Sessions",
+        "content": "I'll be hosting additional help sessions for Calculus II every Tuesday and Thursday evening from 6-8pm in Room 305 until finals.",
+        "category": "Announcement",
+        "likes": 37,
+        "showComments": false,
+        "comments": [
+          {
+            "id": 8,
+            "username": "StudentName",
+            "userAvatar": "/api/placeholder/30/30",
+            "timestamp": 1714718200000,
+            "content": "Thank you so much for this! Will definitely be there."
+          }
+        ]
+      }
+    ]
+  }
