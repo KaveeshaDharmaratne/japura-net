@@ -9,41 +9,35 @@
                 <p>For the students, by the students</p>
             </div>
         </div>
-    
-        <form  @submit.prevent="handleLogin">
-    
+
+        <form @submit.prevent="handleLogin">
+
             <label>Email </label>
-            <input 
-            type="email"
-            v-model="email"
-            placeholder="Enter your university email"
-            required 
-            >
+            <input type="email" v-model="email" placeholder="Enter your university email" required>
             <div v-if="errors.email" class="error">{{ errors.email }}</div>
-     
+
             <label>Password </label>
-            <input 
-            type="password" 
-            v-model="password"
-            placeholder="Enter your password"
-            required 
-            >
+            <input type="password" v-model="password" placeholder="Enter your password" required>
             <div v-if="errors.password" class="error">{{ errors.password }}</div>
-    
+
             <div class="login">
                 <button type="submit">Login</button>
             </div>
-    
+
             <div class="signup-section">
                 <p>Don't have an account?</p>
                 <a @click="goToSignUp" href="#">Sign up</a>
             </div>
         </form>
+        <p v-if="errMsg" class="error">{{ errMsg }}</p>
+        <p><button @click="signInWithGoogle">Sign In With Google</button></p>
     </div>
 </template>
 
 <script>
+import { ref } from 'vue';
 import DoValidations from '../../services/DoValidations';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 export default {
     data() {
@@ -56,28 +50,63 @@ export default {
             errors: '',
             
         }
-    }, 
+    },
     methods: {
         handleLogin() {
             let validations = new DoValidations(
                 this.email,
                 this.password
             );
-
+            
             this.errors = validations.checkValidations();
             if (this.errors.length) {
-                return false    
+                return false
             }
+            
+            const userData = {
+                email: this.email,
+                password: this.password
+            };
+            
+            const auth = getAuth();
+            const errMsg = ref();
+
+            signInWithEmailAndPassword(auth, userData.email, userData.password)
+                .then((data) => {
+                    // Signed in 
+                    console.log("Successfully logged in!");
+                    console.log(auth.currentUser);
+                    // Redirect to home page after successful login
+                    this.$router.push('/home'); 
+                })
+                .catch((error) => {
+                    switch (error.code) {
+                        case 'auth/invalid-email':
+                            errMsg.value = 'Invalid email address.';
+                            break;
+                        case 'auth/user-not-found':
+                            errMsg.value = 'No user found with this email.';
+                            break;
+                        case 'auth/wrong-password':
+                            errMsg.value = 'Incorrect password.';
+                            break;
+                        default:
+                            errMsg.value = 'Email or password was incorrect.';
+                            break;
+                    }
+                });
         },
         goToSignUp() {
             this.$emit('switch-to-signup');
         },
+        signInWithGoogle() {
+            
+        }
     }
 }
 </script>
 
 <style>
-
 form {
     max-width: 420px;
     margin: 30px auto;
@@ -97,7 +126,8 @@ label {
     font-weight: bold;
 }
 
-input, select {
+input,
+select {
     display: block;
     padding: 10px 6px;
     width: 100%;
@@ -133,7 +163,7 @@ input, select {
     color: #555;
 }
 
-.title p { 
+.title p {
     font-size: small;
     text-transform: uppercase;
     color: #aaa;
@@ -147,7 +177,7 @@ input, select {
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    
+
 }
 
 .logo {
@@ -156,7 +186,7 @@ input, select {
 }
 
 button {
-    background:#c3262d;
+    background: #c3262d;
     border: 0;
     padding: 10px 20px;
     margin-top: 20px;
@@ -164,26 +194,30 @@ button {
     border-radius: 20px;
     cursor: pointer;
 }
+
 .login {
     text-align: center;
 }
+
 .signup-section {
     margin-top: 30px;
     text-align: left;
 }
+
 .signup-section p {
     color: #555;
 }
+
 .signup-section a {
     color: #c3262d;
     text-decoration: none;
     font-weight: bold;
 }
+
 .error {
     color: #ff0062;
     margin-top: 10px;
     font-size: 0.8em;
     font-weight: bold;
 }
-
 </style>

@@ -1,26 +1,27 @@
 <template>
     <div>
         <div class="banner">
-            <div class="logo-container">
-                <img :src="getImageUrl('sjp-logo.jpg')" alt="University Logo" class="logo" />
+            <div class="header">
+                <div class="logo-container">
+                    <img :src="getImageUrl('sjp-logo.jpg')" alt="University Logo" class="logo" />
+                </div>
+                <div class="title">
+                    <h1>Student Forum</h1>
+                    <p>Home Feed</p>
+                </div>
             </div>
-            <div class="title">
-                <h1>Student Forum</h1>
-                <p>Home Feed</p>
+            <div class="navBar">
+                <nav>
+                    <p><button @click="signOut">Logout</button></p>
+                </nav>
             </div>
         </div>
-
+        
         <div class="feed-container">
             <!-- Create post section -->
             <div class="create-post">
-                <textarea
-                    v-model="postTitle"
-                    rows="1"
-                    placeholder="Title (optional)"
-                ></textarea>                
-                <textarea 
-                    v-model="newPostContent" 
-                    placeholder="Ask a question or share something with the community..."
+                <textarea v-model="postTitle" rows="1" placeholder="Title (optional)"></textarea>
+                <textarea v-model="newPostContent" placeholder="Ask a question or share something with the community..."
                     rows="3"></textarea>
                 <div class="post-actions">
                     <select v-model="newPostCategory">
@@ -48,7 +49,8 @@
                     <button @click="currentFilter = 'events'" :class="{ active: currentFilter === 'events' }">
                         Events
                     </button>
-                    <button @click="currentFilter = 'announcements'" :class="{ active: currentFilter === 'announcements' }">
+                    <button @click="currentFilter = 'announcements'"
+                        :class="{ active: currentFilter === 'announcements' }">
                         Announcements
                     </button>
                 </div>
@@ -77,7 +79,7 @@
                                     <span class="faculty">{{ post.faculty }}</span>
                                     <span class="timestamp">{{
                                         formatTimestamp(post.timestamp)
-                                        }}</span>
+                                    }}</span>
                                 </div>
                             </div>
                         </div>
@@ -134,6 +136,7 @@
 
 <script>
 import apiService from '@/services/ApiService';
+import { signOut } from 'firebase/auth';
 
 export default {
     name: "HomeFeed",
@@ -258,7 +261,7 @@ export default {
             try {
                 // Call API service to create post
                 const newPost = await apiService.createPost(postData);
-                
+
                 // Add to beginning of array to show at top
                 this.posts.unshift(newPost);
 
@@ -275,7 +278,7 @@ export default {
             try {
                 // Call API service to like post
                 await apiService.likePost(postId);
-                
+
                 // Update local state
                 const post = this.posts.find((p) => p.id === postId);
                 if (post) {
@@ -312,7 +315,7 @@ export default {
             try {
                 // Call API service to add comment
                 const response = await apiService.addComment(postId, commentData);
-                
+
                 if (response.success && response.comment) {
                     // Add comment to local state
                     post.comments.push(response.comment);
@@ -342,7 +345,14 @@ export default {
     display: flex;
     max-width: 800px;
     margin: 10px auto;
-    align-items: flex-start;
+    justify-content: space-between;
+    align-items: flex-center;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    height: 80px;
 }
 
 .title {
@@ -622,5 +632,12 @@ button {
     color: white;
     border-radius: 20px;
     cursor: pointer;
+}
+
+.navBar {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    
 }
 </style>
