@@ -21,7 +21,10 @@
             <div v-if="errors.password" class="error">{{ errors.password }}</div>
 
             <div class="login">
-                <button type="submit">Login</button>
+                <button class="login-button" type="submit">Login</button>
+                <button @click="signInWithGoogle" class="google-button login-button" type="button">
+                    Sign In With Google
+                </button>
             </div>
 
             <div class="signup-section">
@@ -30,7 +33,6 @@
             </div>
         </form>
         <p v-if="errMsg" class="error">{{ errMsg }}</p>
-        <p><button @click="signInWithGoogle">Sign In With Google</button></p>
     </div>
 </template>
 
@@ -48,7 +50,7 @@ export default {
                 return require(`@/assets/${imageName}`);
             },
             errors: '',
-            
+
         }
     },
     methods: {
@@ -57,17 +59,17 @@ export default {
                 this.email,
                 this.password
             );
-            
+
             this.errors = validations.checkValidations();
             if (this.errors.length) {
                 return false
             }
-            
+
             const userData = {
                 email: this.email,
                 password: this.password
             };
-            
+
             const auth = getAuth();
             const errMsg = ref();
 
@@ -77,7 +79,7 @@ export default {
                     console.log("Successfully logged in!");
                     console.log(auth.currentUser);
                     // Redirect to home page after successful login
-                    this.$router.push('/home'); 
+                    this.$router.push('/home');
                 })
                 .catch((error) => {
                     switch (error.code) {
@@ -102,14 +104,14 @@ export default {
         signInWithGoogle() {
             const provider = new GoogleAuthProvider();
             signInWithPopup(getAuth(), provider)
-            .then((result) => {
-                console.log(result.user);
-                this.$router.push('/home');  // Redirect to home page after successful login
-            })
-            .catch((error) => {
-                console.error(error.code);
-                alert(error.code);
-            });
+                .then((result) => {
+                    console.log(result.user);
+                    this.$router.push('/home');  // Redirect to home page after successful login
+                })
+                .catch((error) => {
+                    console.error(error.code);
+                    alert(error.code);
+                });
         }
     }
 }
@@ -202,10 +204,43 @@ button {
     color: white;
     border-radius: 20px;
     cursor: pointer;
+    
+}
+
+.login-button {
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .login {
-    text-align: center;
+    display: flex;
+    margin-top: 20px;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    /* text-align: center; */
+}
+
+.google-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #555;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    transition: background 0.3s ease;
+}
+
+.google-button::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    background: url('https://www.gstatic.com/marketing-cms/assets/images/d5/dc/cfe9ce8b4425b410b49b7f2dd3f3/g.webp=s48-fcrop64=1,00000000ffffffff-rw') no-repeat center;
+    background-size: contain;
 }
 
 .signup-section {
