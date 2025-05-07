@@ -37,7 +37,7 @@
 <script>
 import { ref } from 'vue';
 import DoValidations from '../../services/DoValidations';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 export default {
     data() {
@@ -100,7 +100,16 @@ export default {
             this.$emit('switch-to-signup');
         },
         signInWithGoogle() {
-            
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(getAuth(), provider)
+            .then((result) => {
+                console.log(result.user);
+                this.$router.push('/home');  // Redirect to home page after successful login
+            })
+            .catch((error) => {
+                console.error(error.code);
+                alert(error.code);
+            });
         }
     }
 }

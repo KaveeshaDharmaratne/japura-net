@@ -12,7 +12,7 @@
             </div>
             <div class="navBar">
                 <nav>
-                    <p><button @click="signOut">Logout</button></p>
+                    <p><button class="logout-btn" @click="handleSignOut">Logout</button></p>
                 </nav>
             </div>
         </div>
@@ -136,7 +136,24 @@
 
 <script>
 import apiService from '@/services/ApiService';
-import { signOut } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const isLoggedIn = ref(false);
+const router = useRouter();
+let auth;
+
+onMounted(() => {
+    auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+        if(user) {
+            isLoggedIn.value = true;
+        } else {
+            isLoggedIn.value = false;
+        }
+    });
+});
 
 export default {
     name: "HomeFeed",
@@ -192,6 +209,18 @@ export default {
         },
     },
     methods: {
+        
+        handleSignOut() {
+            const auth = getAuth();
+            signOut(auth)
+            .then(() => {
+                console.log("Signed out successfully!");
+                this.$router.push("/"); // Redirect to login page after sign out
+            })
+            .catch((error) => {
+                console.error("Error signing out:", error);
+            });
+        },
         getImageUrl(imageName) {
             return require(`@/assets/${imageName}`);
         },
@@ -390,6 +419,17 @@ export default {
 .logo {
     width: 100%;
     object-fit: cover;
+}
+
+.logout-btn {
+    background: #fff500;
+    border: 0;
+    padding: 10px 20px;
+    margin-top: 20px;
+    color: #555;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
 }
 
 /* Feed container */
