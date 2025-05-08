@@ -20,14 +20,14 @@ const apolloClient = new ApolloClient({
 })
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBZldRkdvtkBiHC0oSwH5bTcY5Otm-7_h8",
-  authDomain: "japura-net.firebaseapp.com",
-  databaseURL: "https://japura-net-default-rtdb.firebaseio.com",
-  projectId: "japura-net",
-  storageBucket: "japura-net.firebasestorage.app",
-  messagingSenderId: "667540554589",
-  appId: "1:667540554589:web:6c2982d76b7b989b3adeb4",
-  measurementId: "G-TZPZ7RK21R"
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+  authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.VUE_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.VUE_APP_FIREBASE_APP_ID,
+  measurementId: process.env.VUE_APP_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
