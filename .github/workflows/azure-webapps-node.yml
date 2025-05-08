@@ -53,9 +53,11 @@ jobs:
           echo "VUE_APP_FIREBASE_MEASUREMENT_ID=${{ secrets.VUE_APP_FIREBASE_MEASUREMENT_ID }}" >> .env
 
       - name: Install dependencies
+        working-directory: front-end/forum-ui
         run: npm install
 
       - name: Build Vue app
+        working-directory: front-end/forum-ui
         run: npm run build
 
       - name: Deploy to Azure Static Web Apps
@@ -64,4 +66,4 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "dist"
+          app_location: "front-end/forum-ui/dist"
