@@ -248,8 +248,8 @@ button {
 .signup-section {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
-    gap: 10px;
+    justify-content: center;
+    gap: 5px;
     align-items: center;
     margin-top: 30px;
 
