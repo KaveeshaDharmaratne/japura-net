@@ -27,7 +27,7 @@ jobs:
           context: front-end/forum-ui
           file: front-end/forum-ui/dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/your-image-name:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/forum-ui-front:latest
 
   deploy-to-azure:
     needs: build-and-push
