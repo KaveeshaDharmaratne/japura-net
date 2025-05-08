@@ -1,147 +1,132 @@
 <template>
     <div>
-        
-        <div class="main-layout">
-            <nav>
-                <div class="banner">
-                    <div class="header">
-                        <div class="logo-container">
-                            <img :src="getImageUrl('sjp-logo.jpg')" alt="University Logo" class="logo" />
-                        </div>
-                        <div class="title">
-                            <h1>Student Forum</h1>
-                            <p>Home Feed</p>
-                        </div>
-                    </div>
-                    <div class="navBar">
-                        <nav>
-                        </nav>
-                    </div>
+        <div class="banner">
+            <div class="logo-container">
+                <img :src="getImageUrl('sjp-logo.jpg')" alt="University Logo" class="logo" />
+            </div>
+            <div class="title">
+                <h1>Student Forum</h1>
+                <p>Home Feed</p>
+            </div>
+        </div>
+
+        <div class="feed-container">
+            <!-- Create post section -->
+            <div class="create-post">
+                <textarea
+                    v-model="postTitle"
+                    rows="1"
+                    placeholder="Title (optional)"
+                ></textarea>                
+                <textarea 
+                    v-model="newPostContent" 
+                    placeholder="Ask a question or share something with the community..."
+                    rows="3"></textarea>
+                <div class="post-actions">
+                    <select v-model="newPostCategory">
+                        <option value="" disabled selected>Select category</option>
+                        <option v-for="category in categories" :key="category" :value="category">
+                            {{ category }}
+                        </option>
+                    </select>
+                    <button @click="createPost">Post</button>
+                </div>
+            </div>
+
+            <!-- Filter section -->
+            <div class="filter-section">
+                <div class="filter-options">
+                    <button @click="currentFilter = 'all'" :class="{ active: currentFilter === 'all' }">
+                        All Posts
+                    </button>
+                    <button @click="currentFilter = 'questions'" :class="{ active: currentFilter === 'questions' }">
+                        Questions
+                    </button>
+                    <button @click="currentFilter = 'discussions'" :class="{ active: currentFilter === 'discussions' }">
+                        Discussions
+                    </button>
+                    <button @click="currentFilter = 'events'" :class="{ active: currentFilter === 'events' }">
+                        Events
+                    </button>
+                    <button @click="currentFilter = 'announcements'" :class="{ active: currentFilter === 'announcements' }">
+                        Announcements
+                    </button>
+                </div>
+                <div class="sort-options">
+                    <select v-model="sortBy">
+                        <option value="recent">Most Recent</option>
+                        <option value="popular">Most Popular</option>
+                        <option value="comments">Most Comments</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Posts list -->
+            <div class="posts-list">
+                <div v-if="loading" class="loading">Loading posts...</div>
+                <div v-else-if="filteredPosts.length === 0" class="no-posts">
+                    No posts available. Be the first to post!
                 </div>
 
-                <!-- User Info Section -->
-                <div class="user-info-section">
-                    <h3>About Me</h3>
-                    <div class="about-details">
-                        <p><strong>Email:</strong> {{ currentUser.email }}</p>
-                        <p><strong>Username:</strong> {{ currentUser.username }}</p>
-                        <p><strong>Full Name:</strong> {{ currentUser.fullName }}</p>
+                <div v-for="post in filteredPosts" :key="post.id" class="post-card">
+                    <div class="post-header">
+                        <div class="user-info">
+                            <img :src="post.userAvatar || '/api/placeholder/40/40'" alt="User Avatar" class="avatar" />
+                            <div>
+                                <div class="username">{{ post.username }}</div>
+                                <div class="post-meta">
+                                    <span class="faculty">{{ post.faculty }}</span>
+                                    <span class="timestamp">{{
+                                        formatTimestamp(post.timestamp)
+                                        }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-category">{{ post.category }}</div>
                     </div>
-                    <p><button class="logout-btn" @click="handleSignOut">Logout</button></p>
-                </div>
-            </nav>
 
-            <div class="feed-container">
-                <!-- Create post section -->
-                <div class="create-post">
-                    <textarea v-model="postTitle" rows="1" placeholder="Title (optional)"></textarea>
-                    <textarea v-model="newPostContent"
-                        placeholder="Ask a question or share something with the community..." rows="3"></textarea>
+                    <div class="post-content">
+                        <h3 v-if="post.title" class="post-title">{{ post.title }}</h3>
+                        <p>{{ post.content }}</p>
+                        <div v-if="post.image" class="post-image">
+                            <img :src="post.image" alt="Post Image" />
+                        </div>
+                    </div>
+
                     <div class="post-actions">
-                        <select v-model="newPostCategory">
-                            <option value="" disabled selected>Select category</option>
-                            <option v-for="category in categories" :key="category" :value="category">
-                                {{ category }}
-                            </option>
-                        </select>
-                        <button @click="createPost">Post</button>
-                    </div>
-                </div>
-
-                <!-- Filter section -->
-                <div class="filter-section">
-                    <div class="filter-options">
-                        <button @click="currentFilter = 'all'" :class="{ active: currentFilter === 'all' }">
-                            All Posts
-                        </button>
-                        <button @click="currentFilter = 'questions'" :class="{ active: currentFilter === 'questions' }">
-                            Questions
-                        </button>
-                        <button @click="currentFilter = 'discussions'"
-                            :class="{ active: currentFilter === 'discussions' }">
-                            Discussions
-                        </button>
-                        <button @click="currentFilter = 'events'" :class="{ active: currentFilter === 'events' }">
-                            Events
-                        </button>
-                        <button @click="currentFilter = 'announcements'"
-                            :class="{ active: currentFilter === 'announcements' }">
-                            Announcements
-                        </button>
-                    </div>
-                    <div class="sort-options">
-                        <select v-model="sortBy">
-                            <option value="recent">Most Recent</option>
-                            <option value="popular">Most Popular</option>
-                            <option value="comments">Most Comments</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Posts list -->
-                <div class="posts-list">
-                    <div v-if="loading" class="loading">Loading posts...</div>
-                    <div v-else-if="filteredPosts.length === 0" class="no-posts">
-                        No posts available. Be the first to post!
+                        <div class="action-buttons">
+                            <button @click="likePost(post.id)" class="like-button">
+                                <span>👍</span> {{ post.likes }}
+                            </button>
+                            <button @click="showComments(post.id)" class="comment-button">
+                                <span>💬</span> {{ post.comments.length }}
+                            </button>
+                            <button @click="sharePost(post.id)" class="share-button">
+                                <span>↗️</span> Share
+                            </button>
+                        </div>
                     </div>
 
-                    <div v-for="post in filteredPosts" :key="post.id" class="post-card">
-                        <div class="post-header">
-                            <div class="user-info">
+                    <!-- Comments section (toggled by clicking comment button) -->
+                    <div v-if="post.showComments" class="comments-section">
+                        <div v-for="comment in post.comments" :key="comment.id" class="comment">
+                            <div class="comment-header">
+                                <img :src="comment.userAvatar || '/api/placeholder/30/30'" alt="User Avatar"
+                                    class="comment-avatar" />
                                 <div>
-                                    <div class="username">{{ post.username }}</div>
-                                    <div class="post-meta">
-                                        <span class="faculty">{{ post.faculty }}</span>
-                                        <span class="timestamp">{{
-                                            formatTimestamp(post.timestamp)
-                                            }}</span>
+                                    <div class="comment-username">{{ comment.username }}</div>
+                                    <div class="comment-timestamp">
+                                        {{ formatTimestamp(comment.timestamp) }}
                                     </div>
                                 </div>
                             </div>
-                            <div class="post-category">{{ post.category }}</div>
+                            <div class="comment-content">{{ comment.content }}</div>
                         </div>
 
-                        <div class="post-content">
-                            <h3 v-if="post.title" class="post-title">{{ post.title }}</h3>
-                            <p>{{ post.content }}</p>
-                            <div v-if="post.image" class="post-image">
-                                <img :src="post.image" alt="Post Image" />
-                            </div>
-                        </div>
-
-                        <div class="post-actions">
-                            <div class="action-buttons">
-                                <button @click="likePost(post.id)" class="like-button">
-                                    <span>👍</span> {{ post.likes }}
-                                </button>
-                                <button @click="showComments(post.id)" class="comment-button">
-                                    <span>💬</span> {{ post.comments.length }}
-                                </button>
-                                <button @click="sharePost(post.id)" class="share-button">
-                                    <span>↗️</span> Share
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Comments section (toggled by clicking comment button) -->
-                        <div v-if="post.showComments" class="comments-section">
-                            <div v-for="comment in post.comments" :key="comment.id" class="comment">
-                                <div class="comment-header">
-                                    <div>
-                                        <div class="comment-username">{{ comment.username }}</div>
-                                        <div class="comment-timestamp">
-                                            {{ formatTimestamp(comment.timestamp) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="comment-content">{{ comment.content }}</div>
-                            </div>
-
-                            <div class="add-comment">
-                                <input v-model="newComments[post.id]" placeholder="Add a comment..."
-                                    @keyup.enter="addComment(post.id)" />
-                                <button @click="addComment(post.id)">Send</button>
-                            </div>
+                        <div class="add-comment">
+                            <input v-model="newComments[post.id]" placeholder="Add a comment..."
+                                @keyup.enter="addComment(post.id)" />
+                            <button @click="addComment(post.id)">Send</button>
                         </div>
                     </div>
                 </div>
@@ -152,24 +137,6 @@
 
 <script>
 import apiService from '@/services/ApiService';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-import { onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
-
-const isLoggedIn = ref(false);
-const router = useRouter();
-let auth;
-
-onMounted(() => {
-    auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            isLoggedIn.value = true;
-        } else {
-            isLoggedIn.value = false;
-        }
-    });
-});
 
 export default {
     name: "HomeFeed",
@@ -189,11 +156,7 @@ export default {
                 "Announcement",
             ],
             newComments: {},
-            currentUser: {
-                email: "",
-                fullName: "",
-                username: "currentUser",
-            },
+            currentUser: null,
         };
     },
     computed: {
@@ -229,17 +192,6 @@ export default {
         },
     },
     methods: {
-        handleSignOut() {
-            const auth = getAuth();
-            signOut(auth)
-                .then(() => {
-                    console.log("Signed out successfully!");
-                    this.$router.push("/"); // Redirect to login page after sign out
-                })
-                .catch((error) => {
-                    console.error("Error signing out:", error);
-                });
-        },
         getImageUrl(imageName) {
             return require(`@/assets/${imageName}`);
         },
@@ -250,39 +202,25 @@ export default {
                 this.posts = await apiService.fetchPosts();
             } catch (error) {
                 console.error('Error fetching posts:', error);
-                // TODO: Handle error state
+                // Handle error state
             } finally {
                 this.loading = false;
             }
         },
         async fetchCurrentUser() {
-            const auth = getAuth();
-            onAuthStateChanged(auth, async (user) => {
-                if (user) {
-                    // Set the email from the authenticated user
-                    this.currentUser.email = user.email;
-
-                    try {
-                        // TODO: Fetch user details from database
-                        const userDetails = await apiService.fetchUserDetails(user.uid);
-
-                        // Construct fullName and username
-                        const fullName = `${userDetails.firstName} ${userDetails.lastName}`;
-                        this.currentUser.fullName = fullName;
-                        this.currentUser.username = this.toCamelCase(fullName);
-                    } catch (error) {
-                        console.error('Error fetching user details:', error);
-                    }
-                } else {
-                    console.log("No user is signed in.");
-                }
-            });
-        },
-        toCamelCase(str) {
-            return str
-                .replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) =>
-                    index === 0 ? word.toLowerCase() : word.toUpperCase())
-                .replace(/\s+/g, "");
+            try {
+                // Call API service to fetch current user
+                this.currentUser = await apiService.fetchCurrentUser();
+            } catch (error) {
+                console.error('Error fetching current user:', error);
+                // Set a default user in case of error
+                this.currentUser = {
+                    id: 1,
+                    username: "DefaultUser",
+                    faculty: "Unknown",
+                    avatar: "/api/placeholder/40/40",
+                };
+            }
         },
         formatTimestamp(timestamp) {
             const now = Date.now();
@@ -315,8 +253,9 @@ export default {
 
             const postData = {
                 username: this.currentUser.username,
+                userAvatar: this.currentUser.avatar,
                 faculty: this.currentUser.faculty,
-                title: this.postTitle.trim() || null,
+                title: this.postTitle.trim() || null, // Use null if empty
                 content: this.newPostContent,
                 category: this.newPostCategory,
             };
@@ -324,7 +263,7 @@ export default {
             try {
                 // Call API service to create post
                 const newPost = await apiService.createPost(postData);
-
+                
                 // Add to beginning of array to show at top
                 this.posts.unshift(newPost);
 
@@ -341,7 +280,7 @@ export default {
             try {
                 // Call API service to like post
                 await apiService.likePost(postId);
-
+                
                 // Update local state
                 const post = this.posts.find((p) => p.id === postId);
                 if (post) {
@@ -372,13 +311,14 @@ export default {
 
             const commentData = {
                 username: this.currentUser.username,
+                userAvatar: this.currentUser.avatar,
                 content: commentContent,
             };
 
             try {
                 // Call API service to add comment
                 const response = await apiService.addComment(postId, commentData);
-
+                
                 if (response.success && response.comment) {
                     // Add comment to local state
                     post.comments.push(response.comment);
@@ -390,8 +330,8 @@ export default {
             }
         },
         sharePost(postId) {
-            // TODO: Implement sharing logic
-            alert(`Sharing is under development!`);
+            // This would implement sharing functionality
+            alert(`Sharing post ${postId} - implement your sharing logic here`);
         },
     },
     async created() {
@@ -408,14 +348,7 @@ export default {
     display: flex;
     max-width: 800px;
     margin: 10px auto;
-    justify-content: space-between;
-    align-items: flex-center;
-}
-
-.header {
-    display: flex;
-    align-items: center;
-    height: 80px;
+    align-items: flex-start;
 }
 
 .title {
@@ -455,58 +388,8 @@ export default {
     object-fit: cover;
 }
 
-
-/* User info section */
-.main-layout {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.user-info-section {
-    display: flex;
-    flex-direction: column;
-    margin-top: 10%;
-    background: linear-gradient(to bottom right, #dbdbd833,#ffffff);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    max-width: 250px;
-    max-height: auto;
-    
-}
-
-.user-info-section h3 {
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.user-info-section p {
-    font-size: 0.9rem;
-    margin: 5px 0;
-    color: #555;
-}
-
-.about-details {
-    /* background: #fff; */
-    text-align: left;
-}
-
-.logout-btn {
-    background: #c3262d;
-    border: 1px solid #c3262d;
-    padding: 10px 20px;
-    color: #fff;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
 /* Feed container */
 .feed-container {
-    flex: 1;
     max-width: 800px;
     margin: 20px auto;
     background: white;
@@ -613,15 +496,20 @@ button {
 .post-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     margin-bottom: 15px;
 }
 
 .user-info {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
+    align-items: center;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 
 .username {
@@ -703,9 +591,15 @@ button {
 
 .comment-header {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     margin-bottom: 5px;
+}
+
+.comment-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 
 .comment-username {
@@ -720,7 +614,7 @@ button {
 }
 
 .comment-content {
-    margin-top: 5px;
+    margin-left: 40px;
     color: #333;
 }
 
@@ -745,12 +639,5 @@ button {
     color: white;
     border-radius: 20px;
     cursor: pointer;
-}
-
-.navBar {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-
 }
 </style>
