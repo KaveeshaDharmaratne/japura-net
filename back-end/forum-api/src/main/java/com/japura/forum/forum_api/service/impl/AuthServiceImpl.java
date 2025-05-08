@@ -1,4 +1,4 @@
-package com.japura.forum.forum_api.service;
+package com.japura.forum.forum_api.service.impl;
 
 import java.util.concurrent.ExecutionException;
 
@@ -16,6 +16,7 @@ import com.japura.forum.forum_api.dto.AuthPayload;
 import com.japura.forum.forum_api.dto.SignupInput;
 import com.japura.forum.forum_api.dto.User;
 import com.japura.forum.forum_api.model.UserDocument;
+import com.japura.forum.forum_api.service.AuthService;
 
 @Service
 public class AuthServiceImpl implements AuthService {

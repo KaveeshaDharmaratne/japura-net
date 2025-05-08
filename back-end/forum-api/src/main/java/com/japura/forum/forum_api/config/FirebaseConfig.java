@@ -20,13 +20,12 @@ public class FirebaseConfig {
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
 
-        // InputStream serviceAccount = null;
         GoogleCredentials googleCredentials = GoogleCredentials.getApplicationDefault();
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(googleCredentials)
                 .setProjectId(projectId)
-                // .setDatabaseUrl("https://japura-net-default-rtdb.firebaseio.com/")
-                // .setStorageBucket("japura-net.firebasestorage.app")
+                //.setDatabaseUrl("https://japura-net-default-rtdb.firebaseio.com/")
+                //.setStorageBucket("japura-net.firebasestorage.app")
                 .build();
 
         // Check if the firebase app is already initialized

@@ -1,6 +1,5 @@
 package com.japura.forum.forum_api.graphql;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,8 +13,11 @@ import com.netflix.graphql.dgs.DgsDataFetchingEnvironment;
 @DgsComponent
 public class UserQueryResolver {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
+
+    public UserQueryResolver(AuthService authService) {
+        this.authService = authService;
+    }
 
     @DgsData(parentType = "Query", field = "me")
     public User me(DgsDataFetchingEnvironment dfe) {

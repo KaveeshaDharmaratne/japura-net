@@ -7,17 +7,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import com.japura.forum.forum_api.security.FirebaseTokenFilter;
 
-import jakarta.servlet.Filter;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    
+
     private final FirebaseTokenFilter firebaseTokenFilter;
 
     public SecurityConfig(FirebaseTokenFilter firebaseTokenFilter) {
@@ -25,22 +23,22 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
-
-        MvcRequestMatcher.Builder mvc = new MvcRequestMatcher.Builder(introspector);
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector)
+            throws Exception {
 
         http
-        .csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers(mvc.pattern("/graphql")).authenticated()
-            .requestMatchers(mvc.pattern("/graphiql")).permitAll()
-            .anyRequest().authenticated()
-        )
-        .sessionManagement(session -> session
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        )
-        .addFilterBefore((Filter) firebaseTokenFilter, UsernamePasswordAuthenticationFilter.class);
-        
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(authorize -> authorize
+
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/graphql")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/graphiql")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/graphiql/**")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/**")).permitAll())
+
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(firebaseTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
@@ -49,5 +47,4 @@ public class SecurityConfig {
         return new HandlerMappingIntrospector();
     }
 
-    
 }
