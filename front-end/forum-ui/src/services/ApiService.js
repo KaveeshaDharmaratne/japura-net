@@ -11,11 +11,6 @@ class ApiService {
     });
   }
 
-  /**
-   * Fetch current user information
-   * @param {number} delay - Milliseconds to delay the response
-   * @returns {Promise} - Promise resolving to current user object
-   */
   async fetchCurrentUser(delay = 500) {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -24,11 +19,15 @@ class ApiService {
     });
   }
 
-  /**
-   * Add a new post to the data store
-   * @param {Object} post - The post object to add
-   * @returns {Promise} - Promise resolving to the new post with ID
-   */
+  async fetchUserDetails(userId) {
+    // Replace with your API endpoint or database query
+    const response = await fetch(`/api/users/${userId}`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch user details");
+    }
+    return await response.json();
+}
+
   async createPost(post) {
     return new Promise((resolve) => {
       // Get the maximum ID and increment by 1
@@ -48,11 +47,6 @@ class ApiService {
     });
   }
 
-  /**
-   * Like a post by ID
-   * @param {number} postId - The ID of the post to like
-   * @returns {Promise} - Promise resolving to the updated post
-   */
   async likePost(postId) {
     return new Promise((resolve) => {
       // In a real implementation, this would update the server
@@ -60,12 +54,6 @@ class ApiService {
     });
   }
 
-  /**
-   * Add a comment to a post
-   * @param {number} postId - The ID of the post to comment on
-   * @param {Object} comment - The comment object to add
-   * @returns {Promise} - Promise resolving to the new comment with ID
-   */
   async addComment(postId, comment) {
     return new Promise((resolve) => {
       // Find the post to comment on

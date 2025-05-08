@@ -1,131 +1,147 @@
 <template>
     <div>
-        <div class="banner">
-            <div class="header">
-                <div class="logo-container">
-                    <img :src="getImageUrl('sjp-logo.jpg')" alt="University Logo" class="logo" />
-                </div>
-                <div class="title">
-                    <h1>Student Forum</h1>
-                    <p>Home Feed</p>
-                </div>
-            </div>
-            <div class="navBar">
-                <nav>
-                    <p><button class="logout-btn" @click="handleSignOut">Logout</button></p>
-                </nav>
-            </div>
-        </div>
         
-        <div class="feed-container">
-            <!-- Create post section -->
-            <div class="create-post">
-                <textarea v-model="postTitle" rows="1" placeholder="Title (optional)"></textarea>
-                <textarea v-model="newPostContent" placeholder="Ask a question or share something with the community..."
-                    rows="3"></textarea>
-                <div class="post-actions">
-                    <select v-model="newPostCategory">
-                        <option value="" disabled selected>Select category</option>
-                        <option v-for="category in categories" :key="category" :value="category">
-                            {{ category }}
-                        </option>
-                    </select>
-                    <button @click="createPost">Post</button>
-                </div>
-            </div>
-
-            <!-- Filter section -->
-            <div class="filter-section">
-                <div class="filter-options">
-                    <button @click="currentFilter = 'all'" :class="{ active: currentFilter === 'all' }">
-                        All Posts
-                    </button>
-                    <button @click="currentFilter = 'questions'" :class="{ active: currentFilter === 'questions' }">
-                        Questions
-                    </button>
-                    <button @click="currentFilter = 'discussions'" :class="{ active: currentFilter === 'discussions' }">
-                        Discussions
-                    </button>
-                    <button @click="currentFilter = 'events'" :class="{ active: currentFilter === 'events' }">
-                        Events
-                    </button>
-                    <button @click="currentFilter = 'announcements'"
-                        :class="{ active: currentFilter === 'announcements' }">
-                        Announcements
-                    </button>
-                </div>
-                <div class="sort-options">
-                    <select v-model="sortBy">
-                        <option value="recent">Most Recent</option>
-                        <option value="popular">Most Popular</option>
-                        <option value="comments">Most Comments</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Posts list -->
-            <div class="posts-list">
-                <div v-if="loading" class="loading">Loading posts...</div>
-                <div v-else-if="filteredPosts.length === 0" class="no-posts">
-                    No posts available. Be the first to post!
-                </div>
-
-                <div v-for="post in filteredPosts" :key="post.id" class="post-card">
-                    <div class="post-header">
-                        <div class="user-info">
-                            <div>
-                                <div class="username">{{ post.username }}</div>
-                                <div class="post-meta">
-                                    <span class="faculty">{{ post.faculty }}</span>
-                                    <span class="timestamp">{{
-                                        formatTimestamp(post.timestamp)
-                                    }}</span>
-                                </div>
-                            </div>
+        <div class="main-layout">
+            <nav>
+                <div class="banner">
+                    <div class="header">
+                        <div class="logo-container">
+                            <img :src="getImageUrl('sjp-logo.jpg')" alt="University Logo" class="logo" />
                         </div>
-                        <div class="post-category">{{ post.category }}</div>
-                    </div>
-
-                    <div class="post-content">
-                        <h3 v-if="post.title" class="post-title">{{ post.title }}</h3>
-                        <p>{{ post.content }}</p>
-                        <div v-if="post.image" class="post-image">
-                            <img :src="post.image" alt="Post Image" />
+                        <div class="title">
+                            <h1>Student Forum</h1>
+                            <p>Home Feed</p>
                         </div>
                     </div>
+                    <div class="navBar">
+                        <nav>
+                        </nav>
+                    </div>
+                </div>
 
+                <!-- User Info Section -->
+                <div class="user-info-section">
+                    <h3>About Me</h3>
+                    <div class="about-details">
+                        <p><strong>Email:</strong> {{ currentUser.email }}</p>
+                        <p><strong>Username:</strong> {{ currentUser.username }}</p>
+                        <p><strong>Full Name:</strong> {{ currentUser.fullName }}</p>
+                    </div>
+                    <p><button class="logout-btn" @click="handleSignOut">Logout</button></p>
+                </div>
+            </nav>
+
+            <div class="feed-container">
+                <!-- Create post section -->
+                <div class="create-post">
+                    <textarea v-model="postTitle" rows="1" placeholder="Title (optional)"></textarea>
+                    <textarea v-model="newPostContent"
+                        placeholder="Ask a question or share something with the community..." rows="3"></textarea>
                     <div class="post-actions">
-                        <div class="action-buttons">
-                            <button @click="likePost(post.id)" class="like-button">
-                                <span>👍</span> {{ post.likes }}
-                            </button>
-                            <button @click="showComments(post.id)" class="comment-button">
-                                <span>💬</span> {{ post.comments.length }}
-                            </button>
-                            <button @click="sharePost(post.id)" class="share-button">
-                                <span>↗️</span> Share
-                            </button>
-                        </div>
+                        <select v-model="newPostCategory">
+                            <option value="" disabled selected>Select category</option>
+                            <option v-for="category in categories" :key="category" :value="category">
+                                {{ category }}
+                            </option>
+                        </select>
+                        <button @click="createPost">Post</button>
+                    </div>
+                </div>
+
+                <!-- Filter section -->
+                <div class="filter-section">
+                    <div class="filter-options">
+                        <button @click="currentFilter = 'all'" :class="{ active: currentFilter === 'all' }">
+                            All Posts
+                        </button>
+                        <button @click="currentFilter = 'questions'" :class="{ active: currentFilter === 'questions' }">
+                            Questions
+                        </button>
+                        <button @click="currentFilter = 'discussions'"
+                            :class="{ active: currentFilter === 'discussions' }">
+                            Discussions
+                        </button>
+                        <button @click="currentFilter = 'events'" :class="{ active: currentFilter === 'events' }">
+                            Events
+                        </button>
+                        <button @click="currentFilter = 'announcements'"
+                            :class="{ active: currentFilter === 'announcements' }">
+                            Announcements
+                        </button>
+                    </div>
+                    <div class="sort-options">
+                        <select v-model="sortBy">
+                            <option value="recent">Most Recent</option>
+                            <option value="popular">Most Popular</option>
+                            <option value="comments">Most Comments</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Posts list -->
+                <div class="posts-list">
+                    <div v-if="loading" class="loading">Loading posts...</div>
+                    <div v-else-if="filteredPosts.length === 0" class="no-posts">
+                        No posts available. Be the first to post!
                     </div>
 
-                    <!-- Comments section (toggled by clicking comment button) -->
-                    <div v-if="post.showComments" class="comments-section">
-                        <div v-for="comment in post.comments" :key="comment.id" class="comment">
-                            <div class="comment-header">
+                    <div v-for="post in filteredPosts" :key="post.id" class="post-card">
+                        <div class="post-header">
+                            <div class="user-info">
                                 <div>
-                                    <div class="comment-username">{{ comment.username }}</div>
-                                    <div class="comment-timestamp">
-                                        {{ formatTimestamp(comment.timestamp) }}
+                                    <div class="username">{{ post.username }}</div>
+                                    <div class="post-meta">
+                                        <span class="faculty">{{ post.faculty }}</span>
+                                        <span class="timestamp">{{
+                                            formatTimestamp(post.timestamp)
+                                            }}</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="comment-content">{{ comment.content }}</div>
+                            <div class="post-category">{{ post.category }}</div>
                         </div>
 
-                        <div class="add-comment">
-                            <input v-model="newComments[post.id]" placeholder="Add a comment..."
-                                @keyup.enter="addComment(post.id)" />
-                            <button @click="addComment(post.id)">Send</button>
+                        <div class="post-content">
+                            <h3 v-if="post.title" class="post-title">{{ post.title }}</h3>
+                            <p>{{ post.content }}</p>
+                            <div v-if="post.image" class="post-image">
+                                <img :src="post.image" alt="Post Image" />
+                            </div>
+                        </div>
+
+                        <div class="post-actions">
+                            <div class="action-buttons">
+                                <button @click="likePost(post.id)" class="like-button">
+                                    <span>👍</span> {{ post.likes }}
+                                </button>
+                                <button @click="showComments(post.id)" class="comment-button">
+                                    <span>💬</span> {{ post.comments.length }}
+                                </button>
+                                <button @click="sharePost(post.id)" class="share-button">
+                                    <span>↗️</span> Share
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Comments section (toggled by clicking comment button) -->
+                        <div v-if="post.showComments" class="comments-section">
+                            <div v-for="comment in post.comments" :key="comment.id" class="comment">
+                                <div class="comment-header">
+                                    <div>
+                                        <div class="comment-username">{{ comment.username }}</div>
+                                        <div class="comment-timestamp">
+                                            {{ formatTimestamp(comment.timestamp) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="comment-content">{{ comment.content }}</div>
+                            </div>
+
+                            <div class="add-comment">
+                                <input v-model="newComments[post.id]" placeholder="Add a comment..."
+                                    @keyup.enter="addComment(post.id)" />
+                                <button @click="addComment(post.id)">Send</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -147,7 +163,7 @@ let auth;
 onMounted(() => {
     auth = getAuth();
     onAuthStateChanged(auth, (user) => {
-        if(user) {
+        if (user) {
             isLoggedIn.value = true;
         } else {
             isLoggedIn.value = false;
@@ -173,7 +189,11 @@ export default {
                 "Announcement",
             ],
             newComments: {},
-            currentUser: null,
+            currentUser: {
+                email: "",
+                fullName: "",
+                username: "currentUser",
+            },
         };
     },
     computed: {
@@ -209,17 +229,16 @@ export default {
         },
     },
     methods: {
-        
         handleSignOut() {
             const auth = getAuth();
             signOut(auth)
-            .then(() => {
-                console.log("Signed out successfully!");
-                this.$router.push("/"); // Redirect to login page after sign out
-            })
-            .catch((error) => {
-                console.error("Error signing out:", error);
-            });
+                .then(() => {
+                    console.log("Signed out successfully!");
+                    this.$router.push("/"); // Redirect to login page after sign out
+                })
+                .catch((error) => {
+                    console.error("Error signing out:", error);
+                });
         },
         getImageUrl(imageName) {
             return require(`@/assets/${imageName}`);
@@ -231,24 +250,39 @@ export default {
                 this.posts = await apiService.fetchPosts();
             } catch (error) {
                 console.error('Error fetching posts:', error);
-                // Handle error state
+                // TODO: Handle error state
             } finally {
                 this.loading = false;
             }
         },
         async fetchCurrentUser() {
-            try {
-                // Call API service to fetch current user
-                this.currentUser = await apiService.fetchCurrentUser();
-            } catch (error) {
-                console.error('Error fetching current user:', error);
-                // Set a default user in case of error
-                this.currentUser = {
-                    id: 1,
-                    username: "DefaultUser",
-                    faculty: "Unknown",
-                };
-            }
+            const auth = getAuth();
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    // Set the email from the authenticated user
+                    this.currentUser.email = user.email;
+
+                    try {
+                        // TODO: Fetch user details from database
+                        const userDetails = await apiService.fetchUserDetails(user.uid);
+
+                        // Construct fullName and username
+                        const fullName = `${userDetails.firstName} ${userDetails.lastName}`;
+                        this.currentUser.fullName = fullName;
+                        this.currentUser.username = this.toCamelCase(fullName);
+                    } catch (error) {
+                        console.error('Error fetching user details:', error);
+                    }
+                } else {
+                    console.log("No user is signed in.");
+                }
+            });
+        },
+        toCamelCase(str) {
+            return str
+                .replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) =>
+                    index === 0 ? word.toLowerCase() : word.toUpperCase())
+                .replace(/\s+/g, "");
         },
         formatTimestamp(timestamp) {
             const now = Date.now();
@@ -282,7 +316,7 @@ export default {
             const postData = {
                 username: this.currentUser.username,
                 faculty: this.currentUser.faculty,
-                title: this.postTitle.trim() || null, // Use null if empty
+                title: this.postTitle.trim() || null,
                 content: this.newPostContent,
                 category: this.newPostCategory,
             };
@@ -356,8 +390,8 @@ export default {
             }
         },
         sharePost(postId) {
-            // This would implement sharing functionality
-            alert(`Sharing post ${postId} - implement your sharing logic here`);
+            // TODO: Implement sharing logic
+            alert(`Sharing is under development!`);
         },
     },
     async created() {
@@ -421,12 +455,50 @@ export default {
     object-fit: cover;
 }
 
-.logout-btn {
-    background: #fff500;
-    border: 0;
-    padding: 10px 20px;
-    margin-top: 20px;
+
+/* User info section */
+.main-layout {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.user-info-section {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10%;
+    background: linear-gradient(to bottom right, #dbdbd833,#ffffff);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 250px;
+    max-height: auto;
+    
+}
+
+.user-info-section h3 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.user-info-section p {
+    font-size: 0.9rem;
+    margin: 5px 0;
     color: #555;
+}
+
+.about-details {
+    /* background: #fff; */
+    text-align: left;
+}
+
+.logout-btn {
+    background: #c3262d;
+    border: 1px solid #c3262d;
+    padding: 10px 20px;
+    color: #fff;
     border-radius: 20px;
     cursor: pointer;
     font-weight: bold;
@@ -434,6 +506,7 @@ export default {
 
 /* Feed container */
 .feed-container {
+    flex: 1;
     max-width: 800px;
     margin: 20px auto;
     background: white;
@@ -678,6 +751,6 @@ button {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    
+
 }
 </style>

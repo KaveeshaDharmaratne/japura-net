@@ -44,7 +44,7 @@ router.beforeEach(async (to, from, next) => {
 
   if (requiresAuth && !user) {
       // Route requires auth, but user is not logged in
-      alert("You need to be logged in to access this page."); // Optional alert
+      alert("You need to be logged in to access this page.");
       next("/"); // Redirect to login page
   } else if (hideForAuth && user) {
       // Route should be hidden for authenticated users (like login/register)
