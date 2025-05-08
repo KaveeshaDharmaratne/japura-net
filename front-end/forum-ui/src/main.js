@@ -1,13 +1,24 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core'
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// HTTP connection to the API
+const httpLink = createHttpLink({
+  // You should use an absolute URL here
+  uri: 'http://localhost:3020/graphql',
+})
+
+// Cache implementation
+const cache = new InMemoryCache()
+
+// Create the apollo client
+const apolloClient = new ApolloClient({
+  link: httpLink,
+  cache,
+})
+
 const firebaseConfig = {
   apiKey: "AIzaSyBZldRkdvtkBiHC0oSwH5bTcY5Otm-7_h8",
   authDomain: "japura-net.firebaseapp.com",

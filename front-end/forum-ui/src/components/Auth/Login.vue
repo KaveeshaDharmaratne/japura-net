@@ -28,8 +28,12 @@
             </div>
 
             <div class="signup-section">
-                <p>Don't have an account?</p>
-                <a @click="goToSignUp" href="#">Sign up</a>
+                <div class="signup-text">
+                    <p>Don't have an account?</p>
+                </div>
+                <div class="signup-link">
+                    <a @click="goToSignUp" href="#">Sign up</a>
+                </div>
             </div>
         </form>
         <p v-if="errMsg" class="error">{{ errMsg }}</p>
@@ -208,29 +212,27 @@ button {
 }
 
 .login-button {
-    font-weight: bold;
     text-transform: uppercase;
+    width: 100%;
+    font-weight: 700;
+    height: 40px;
 }
 
 .login {
     display: flex;
     margin-top: 20px;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    /* text-align: center; */
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 .google-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #555;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
-    transition: background 0.3s ease;
+    color: rgb(65, 63, 63);
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.25);
 }
 
 .google-button::before {
@@ -244,8 +246,13 @@ button {
 }
 
 .signup-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+    align-items: center;
     margin-top: 30px;
-    text-align: left;
+
 }
 
 .signup-section p {

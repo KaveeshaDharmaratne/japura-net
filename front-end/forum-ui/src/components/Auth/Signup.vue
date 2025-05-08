@@ -128,14 +128,53 @@ export default {
         faculty: this.faculty,
         password: this.password
       };
-
-      const auth = getAuth()
+      
+      // Firebase authentication
+      const auth = getAuth();
       createUserWithEmailAndPassword(auth, userData.email, userData.password)
         .then((data) => {
           console.log("Registered successfully!");
           console.log(auth.currentUser);
+
+          // Get JWT token
+          return auth.currentUser.getIdToken();
+        })
+        .then((idToken) => {
+          console.log("Firebase ID Token:", idToken);
+
+          // Send userData and idToken to backend via graphql
+          const mutation = `
+            mutation {
+              registerUser(
+                firstName: "${userData.firstName}",
+                lastName: "${userData.lastName}",
+                email: "${userData.email}",
+                faculty: "${userData.faculty}",
+                password: "${userData.password}",
+                idToken: "${idToken}"
+              ) {
+                  id
+                  email
+                }
+            }
+          `;
+
+          return fetch('https://graphql-endpoint-url', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${idToken}`
+            },
+            body: JSON.stringify({ query: mutation })
+          });
+        })
+        .then((res => res.json()))
+        .then(result => {
+          console.log('Backend response:', result);
           alert('Account created successfully! Redirecting to home page...');
-          this.$router.push('/home'); // Redirect to home page after successful signup
+
+          // Redirect to home page after successful signup
+          this.$router.push('/home');
         })
         .catch((error) => {
           console.error(error.code);
@@ -144,7 +183,6 @@ export default {
 
       console.log('Signup form submitted:', userData);
 
-      // For demo purposes - would be replaced with actual API call
     },
     goToLogin() {
       this.$emit('switch-to-login');
