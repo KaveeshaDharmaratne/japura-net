@@ -5,10 +5,12 @@ import java.util.List;
 import com.japura.forum.forum_api.dto.ForumPost;
 import com.japura.forum.forum_api.dto.User;
 import com.japura.forum.forum_api.service.PostService;
+import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsData;
 import com.netflix.graphql.dgs.DgsDataFetchingEnvironment;
 import com.netflix.graphql.dgs.DgsQuery;
 
+@DgsComponent
 public class ForumPostQueryResolver {
 
     private final PostService postService;

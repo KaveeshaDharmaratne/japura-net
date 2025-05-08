@@ -8,9 +8,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.japura.forum.forum_api.dto.CreatePostInput;
 import com.japura.forum.forum_api.dto.ForumPost;
 import com.japura.forum.forum_api.service.PostService;
+import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsDataFetchingEnvironment;
 import com.netflix.graphql.dgs.DgsMutation;
 
+@DgsComponent
 public class ForumPostMutationResolver {
 
     private final PostService postService;
