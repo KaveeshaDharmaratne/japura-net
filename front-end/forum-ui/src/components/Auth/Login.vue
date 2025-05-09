@@ -35,6 +35,7 @@
                     <a @click="goToSignUp" href="#">Sign up</a>
                 </div>
             </div>
+            <button> Click Me </button>
         </form>
         <p v-if="errMsg" class="error">{{ errMsg }}</p>
     </div>
