@@ -37,6 +37,7 @@
             </div>
             <button> Click Me </button>
         </form>
+        <button>Click me</button>
         <p v-if="errMsg" class="error">{{ errMsg }}</p>
     </div>
 </template>

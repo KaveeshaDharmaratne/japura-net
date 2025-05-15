@@ -114,7 +114,7 @@ export default {
         return;
       }
 
-      // Check if email has a valid university domain (example validation)
+      // Check if email has a valid university domain
       if (!this.email.includes('.sjp') && !this.email.includes('.ac')) {
         this.passwordError = 'Please use a valid university email address';
         return;
